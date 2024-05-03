@@ -1,0 +1,23 @@
+; Changing these settings to values other than zero will cause difficulty and race lengths to change in the career mode of this game.
+; Modifier ces paramètres avec des valeurs autres que zéro changera la difficulté et les longueurs de course dans le mode carrière de ce jeu.
+; Das Ändern dieser Einstellungen zu anderen Werten als Null verändert den Schwierigkeitsgrad und die Rennlänge im Karrieremodus des Spiels.
+; Attribuendo a queste impostazioni valori superiori a zero cambierà la difficoltà e la durata delle corse nella modalità Carriera.
+; Si modificas la configuración a unos valores distintos de cero, cambiarás la dificultad y la duración de las pruebas en la modalidad de carrera.
+
+[Mods]
+; Use 0 as default, or use range between 60 and 100
+; Utilisez 0 comme valeur par défaut ou un chiffre entre 60 et 100
+; Verwenden Sie 0 als Standard oder den Bereich zwischen 60 und 100
+; Usa 0 come impostazione predefinita, oppure un numero tra 60 e 100
+; Usa 0 como valor normal, o un número entre 60 y 100
+CareerDiff=0
+
+; Use 0 as default, or use a multiplier between 1 and 10
+; Utilisez 0 comme valeur par défaut ou un multiplicateur compris entre 1 et 10
+; Verwenden Sie 0 als Standard oder einen Multiplikator zwischen 1 und 10
+; Usa 0 come impostazione predefinita, oppure moltiplica per un numero tra 1 e 10
+; Usa 0 como valor normal, o un multiplicador entre 1 y 10
+CareerLapMultiply=0
+
+; On or Off
+CareerProSim=Off

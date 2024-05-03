@@ -5,32 +5,37 @@ using System.Text.RegularExpressions;
 using Toca3DifficultyEditor;
 
 const string CHAMP_BIG_FILE_PATH_RELATIVE_TO_GAMEDIR = @"gamedata\chamship\champ.big";
+const string MODS_FILE_PATH_RELATIVE_TO_GAMEDIR      = @"gamedata\frontend\Mods.ini";
 
 Encoding fileEncoding = Encoding.Latin1;
 var optionsParser = new CommandLineApplication<Options> {
     UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.Throw,
     Description                  = "Change the difficulty of all AI drivers in ToCA Race Driver 3"
 };
-optionsParser.Conventions.UseDefaultConventions();
-optionsParser.ExtendedHelpText = $"""
 
-                                  Examples:
-                                    Set all of the AI drivers to be as easy as the easiest stock AI driver:
-                                      {optionsParser.Name} --career-difficulty 80 --ai-aggression 0.6 --ai-control 0.5 --ai-perfection 0.5 --ai-corner-entry-speed 0.6 --ai-corner-exit-speed 0.4 --ai-start-line 0.5
-                                      
-                                    Set all of the AI drivers to minimum difficulty:
-                                      {optionsParser.Name} --career-difficulty 60 --ai-aggression 0 --ai-control 0 --ai-perfection 0 --ai-corner-entry-speed 0 --ai-corner-exit-speed 0 --ai-start-line 0
-                                      
-                                    Set all of the AI drivers to maximum difficulty:
-                                      {optionsParser.Name} --career-difficulty 100 --ai-aggression 1 --ai-control 1 --ai-perfection 1 --ai-corner-entry-speed 1 --ai-corner-exit-speed 1 --ai-start-line 1
-                                      
-                                    Specify the game installation directory if it can't be found automatically:
-                                      {optionsParser.Name} --game-dir "C:\Program Files (x86)\Codemasters\Race Driver 3" --career-difficulty 60
-                                  """;
+optionsParser.Conventions.UseDefaultConventions();
+optionsParser.ExtendedHelpText =
+    $"""
+
+     Examples:
+       Set all of the AI drivers to be as easy as the easiest stock AI driver:
+         {optionsParser.Name} --career-difficulty 80 --ai-aggression 0.6 --ai-control 0.5 --ai-perfection 0.5 --ai-corner-entry-speed 0.6 --ai-corner-exit-speed 0.4 --ai-start-line 0.5
+         
+       Set all of the AI drivers to minimum difficulty:
+         {optionsParser.Name} --career-difficulty 60 --ai-aggression 0 --ai-control 0 --ai-perfection 0 --ai-corner-entry-speed 0 --ai-corner-exit-speed 0 --ai-start-line 0
+         
+       Set all of the AI drivers to maximum difficulty:
+         {optionsParser.Name} --career-difficulty 100 --ai-aggression 1 --ai-control 1 --ai-perfection 1 --ai-corner-entry-speed 1 --ai-corner-exit-speed 1 --ai-start-line 1
+         
+       Specify the game installation directory if it can't be found automatically:
+         {optionsParser.Name} --game-dir "C:\Program Files (x86)\Codemasters\Race Driver 3" --career-difficulty 60
+     """;
+
 try {
     optionsParser.Parse(args);
 } catch (CommandParsingException e) {
     Console.WriteLine($"Invalid arguments: {e.Message}");
+    optionsParser.ShowHelp();
     return 1;
 }
 
@@ -43,11 +48,9 @@ bool shouldChangeChampBigFile = options.aiAggression != null
     || options.aiStartLine != null;
 if (optionsParser.OptionHelp?.HasValue() ?? false) {
     return 0;
-} else {
-    if (!shouldChangeChampBigFile && options.careerDifficulty == null) {
-        optionsParser.ShowHelp();
-        return 0;
-    }
+} else if (!shouldChangeChampBigFile && options.careerDifficulty == null) {
+    optionsParser.ShowHelp();
+    return 0;
 }
 
 CancellationTokenSource cts = new();
@@ -78,21 +81,18 @@ if (shouldChangeChampBigFile) {
     };
 
     foreach (KeyValuePair<string, double> changeToMake in changesToMake.Compact()) {
-        if (ct.IsCancellationRequested) break;
         setAllValues(champBigFileContents, changeToMake.Key, changeToMake.Value.ToString("F5"));
     }
 
-    if (ct.IsCancellationRequested) return 2;
     await File.WriteAllBytesAsync(champBigFilePath, champBigFileContents, ct);
 }
 
 if (options.careerDifficulty != null) {
-    string modsFilePath = Path.Combine(gameInstallationDirectory, @"gamedata\frontend\Mods.ini");
+    string modsFilePath = Path.Combine(gameInstallationDirectory, MODS_FILE_PATH_RELATIVE_TO_GAMEDIR);
     string modsContents = await File.ReadAllTextAsync(modsFilePath, fileEncoding, ct);
 
-    modsContents = Regex.Replace(modsContents, @"^CareerDiff\s*=\s*([\d\.,+-]+)$", $"CareerDiff={options.careerDifficulty:D}", RegexOptions.Multiline);
+    modsContents = Regex.Replace(modsContents, @"^CareerDiff\s*=\s*([\d\.,+-]+)(?=\r?$)", $"CareerDiff={options.careerDifficulty:D}", RegexOptions.Multiline);
 
-    if (ct.IsCancellationRequested) return 2;
     await File.WriteAllTextAsync(modsFilePath, modsContents, fileEncoding, ct);
 }
 
@@ -136,7 +136,9 @@ string? findGameInstallationDirectory() {
 
     return null;
 
-    static bool isCorrectGameDirectory(string dir) => File.Exists(Path.Combine(dir, "rd3.exe")) && File.Exists(Path.Combine(dir, CHAMP_BIG_FILE_PATH_RELATIVE_TO_GAMEDIR));
+    static bool isCorrectGameDirectory(string dir) => File.Exists(Path.Combine(dir, "rd3.exe"))
+        && File.Exists(Path.Combine(dir, CHAMP_BIG_FILE_PATH_RELATIVE_TO_GAMEDIR))
+        && File.Exists(Path.Combine(dir, MODS_FILE_PATH_RELATIVE_TO_GAMEDIR));
 }
 
 void setAllValues(byte[] fileContents, string query, string newValue) {
