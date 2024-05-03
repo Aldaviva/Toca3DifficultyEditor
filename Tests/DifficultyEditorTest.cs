@@ -11,7 +11,10 @@ public class DifficultyEditorTest {
         return (Task<int>) mainMethod.Invoke(null, [args])!;
     }
 
-    public DifficultyEditorTest() {
+    public DifficultyEditorTest(ITestOutputHelper testOutputHelper) {
+        testOutputHelper.WriteLine("CWD: " + Environment.CurrentDirectory);
+        testOutputHelper.WriteLine("EXE: " + Environment.ProcessPath);
+
         File.Copy(@"Game\Codemasters\Race Driver 3\gamedata\frontend\Mods.ini.original", @"Game\Codemasters\Race Driver 3\gamedata\frontend\Mods.ini", true);
         File.Copy(@"Game\Codemasters\Race Driver 3\gamedata\chamship\champ.big.original", @"Game\Codemasters\Race Driver 3\gamedata\chamship\champ.big", true);
     }
