@@ -10,13 +10,7 @@
         "dependencies": {
           "System.ComponentModel.Annotations": "5.0.0"
         }
-      },
-      "Microsoft.NET.ILLink.Tasks": {
-        "type": "Direct",
-        "requested": "[8.0.4, )",
-        "resolved": "8.0.4",
-        "contentHash": "PZb5nfQ+U19nhnmnR9T1jw+LTmozhuG2eeuzuW5A7DqxD/UXW2ucjmNJqnqOuh8rdPzM3MQXoF8AfFCedJdCUw=="
-      },
+      },      
       "System.ComponentModel.Annotations": {
         "type": "Transitive",
         "resolved": "5.0.0",
