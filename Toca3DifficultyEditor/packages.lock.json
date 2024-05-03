@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net8.0-windows7.0": {
+      "McMaster.Extensions.CommandLineUtils": {
+        "type": "Direct",
+        "requested": "[4.1.1, )",
+        "resolved": "4.1.1",
+        "contentHash": "zxgDY+G5yVq2q8sVB3Z275Qkxed1jC95nwAfnlSyoG4l5Nicvd4+ke1jXusEZEfyuErlAgXCKS937c13FmZWBg==",
+        "dependencies": {
+          "System.ComponentModel.Annotations": "5.0.0"
+        }
+      },
+      "Microsoft.NET.ILLink.Tasks": {
+        "type": "Direct",
+        "requested": "[8.0.4, )",
+        "resolved": "8.0.4",
+        "contentHash": "PZb5nfQ+U19nhnmnR9T1jw+LTmozhuG2eeuzuW5A7DqxD/UXW2ucjmNJqnqOuh8rdPzM3MQXoF8AfFCedJdCUw=="
+      },
+      "System.ComponentModel.Annotations": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
+      }
+    },
+    "net8.0-windows7.0/win-x64": {}
+  }
+}

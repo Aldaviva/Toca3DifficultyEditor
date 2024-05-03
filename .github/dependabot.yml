@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/Toca3DifficultyEditor"
+    schedule:
+      interval: "weekly"
