@@ -5,15 +5,18 @@ namespace Tests;
 
 public class DifficultyEditorTest {
 
+    // private ITestOutputHelper Console { get; }
+
     private static Task<int> main(params string[] args) {
         MethodInfo mainMethod = typeof(Program).GetMethod("<Main>$", BindingFlags.Static | BindingFlags.NonPublic, [typeof(string[])])!;
 
         return (Task<int>) mainMethod.Invoke(null, [args])!;
     }
 
-    public DifficultyEditorTest(ITestOutputHelper testOutputHelper) {
-        testOutputHelper.WriteLine("CWD: " + Environment.CurrentDirectory);
-        testOutputHelper.WriteLine("EXE: " + Environment.ProcessPath);
+    public DifficultyEditorTest(ITestOutputHelper console) {
+        // Console = console;
+        Console.WriteLine("CWD: " + Environment.CurrentDirectory);
+        Console.WriteLine("EXE: " + Environment.ProcessPath);
 
         File.Copy(@"Game\Codemasters\Race Driver 3\gamedata\frontend\Mods.ini.original", @"Game\Codemasters\Race Driver 3\gamedata\frontend\Mods.ini", true);
         File.Copy(@"Game\Codemasters\Race Driver 3\gamedata\chamship\champ.big.original", @"Game\Codemasters\Race Driver 3\gamedata\chamship\champ.big", true);
@@ -130,11 +133,13 @@ public class DifficultyEditorTest {
         string oldCwd = Environment.CurrentDirectory;
         try {
             Environment.CurrentDirectory = Path.Combine(Environment.CurrentDirectory, @"Game\Codemasters\Race Driver 3");
+            Console.WriteLine($"CWD changed from {oldCwd} to {Environment.CurrentDirectory} for cwd test");
             int exitCode = await main("--career-difficulty", "60");
             exitCode.Should().Be(0);
             await fileContentsShouldBeEqual(@"gamedata\frontend\Mods.ini", @"gamedata\frontend\Mods.ini.mindifficulty");
         } finally {
             Environment.CurrentDirectory = oldCwd;
+            Console.WriteLine($"CWD reverted to {oldCwd}");
         }
     }
 
